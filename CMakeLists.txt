@@ -30,6 +30,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 
 ######################################################
 # TESTS
+rosidl_get_typesupport_target(cpp_typesupport_target "${PROJECT_NAME}" "rosidl_typesupport_cpp")
 
 add_executable(sleep_server test/sleep_server.cpp)
 target_include_directories(sleep_server PRIVATE
@@ -38,7 +39,9 @@ target_include_directories(sleep_server PRIVATE
 ament_target_dependencies(sleep_server
   ${THIS_PACKAGE_INCLUDE_DEPENDS}
 )
-rosidl_target_interfaces(sleep_server ${PROJECT_NAME} "rosidl_typesupport_cpp")
+target_link_libraries(sleep_server
+  ${cpp_typesupport_target}
+)
 
 
 add_executable(test_client test/test_client.cpp)
@@ -48,7 +51,9 @@ target_include_directories(test_client PRIVATE
 ament_target_dependencies(test_client
   ${THIS_PACKAGE_INCLUDE_DEPENDS}
 )
-rosidl_target_interfaces(test_client ${PROJECT_NAME} "rosidl_typesupport_cpp")
+target_link_libraries(test_client
+  ${cpp_typesupport_target}
+)
 
 
 #add_executable(test_server test/test_server.cpp)
@@ -76,5 +81,3 @@ install(
 ament_export_include_directories(include)
 
 ament_package()
-
-
