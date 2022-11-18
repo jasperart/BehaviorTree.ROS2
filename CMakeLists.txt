@@ -30,7 +30,9 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 
 ######################################################
 # TESTS
-rosidl_get_typesupport_target(cpp_typesupport_target "${PROJECT_NAME}" "rosidl_typesupport_cpp")
+
+# Need the target name to depend on generated interface libraries
+rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME} "rosidl_typesupport_cpp")
 
 add_executable(sleep_server test/sleep_server.cpp)
 target_include_directories(sleep_server PRIVATE
@@ -39,10 +41,7 @@ target_include_directories(sleep_server PRIVATE
 ament_target_dependencies(sleep_server
   ${THIS_PACKAGE_INCLUDE_DEPENDS}
 )
-target_link_libraries(sleep_server
-  ${cpp_typesupport_target}
-)
-
+target_link_libraries(sleep_server ${cpp_typesupport_target})
 
 add_executable(test_client test/test_client.cpp)
 target_include_directories(test_client PRIVATE
@@ -51,10 +50,7 @@ target_include_directories(test_client PRIVATE
 ament_target_dependencies(test_client
   ${THIS_PACKAGE_INCLUDE_DEPENDS}
 )
-target_link_libraries(test_client
-  ${cpp_typesupport_target}
-)
-
+target_link_libraries(test_client ${cpp_typesupport_target})
 
 #add_executable(test_server test/test_server.cpp)
 #add_dependencies(test_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -66,10 +62,8 @@ target_link_libraries(test_client
 install(TARGETS
   sleep_server
   test_client
-  RUNTIME DESTINATION bin
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  )
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 install(
   DIRECTORY include/
